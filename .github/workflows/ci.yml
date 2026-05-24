@@ -49,6 +49,19 @@ jobs:
       - name: Run tests
         run: dotnet test -c Release --no-build
 
+      - name: Login to container registry
+        if: github.event_name == 'release'
+        run: docker login -u $GITHUB_REPOSITORY_OWNER -p $GITHUB_TOKEN ghcr.io
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Build and publish docker image(s)
+        if: github.event_name == 'release'
+        run: >-
+          dotnet publish /t:PublishContainer
+          -c Release
+          /p:ContainerRegistry=ghcr.io
+          --no-build
 
 #
 # Below are the boilerplates for some "deploy" scenarios.
