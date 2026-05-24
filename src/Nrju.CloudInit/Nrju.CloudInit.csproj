@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!-- Uncomment the following lines to build EXE file with optionally custom name.
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName></AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  -->
+
+  <!-- Uncomment the following lines to enable NuGet package building.
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  -->
+
+  <!-- Uncomment the following line to enable publishing.
+  <PropertyGroup>
+    <IsPublishable>true</IsPublishable>
+  </PropertyGroup>
+  -->
+
+  <!-- Uncomment the following lines to enable container image building.
+       See:
+         https://learn.microsoft.com/en-us/dotnet/core/containers/overview/
+         https://github.com/dotnet/sdk-container-builds/issues/236
+  <PropertyGroup>
+    <ContainerRepository>$(GITHUB_REPO_OWNER)/$(GITHUB_REPO_NAME)</ContainerRepository>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:10.0-alpine</ContainerBaseImage>
+    <ContainerRuntimeIdentifier>linux-x64</ContainerRuntimeIdentifier>
+    <ContainerImageFormat>OCI</ContainerImageFormat>
+  </PropertyGroup>
+  <Target Name="SetContainerImageTag" BeforeTargets="PublishContainer">
+    <ItemGroup>
+      <ContainerImageTags Include="$(Version)" />
+    </ItemGroup>
+  </Target>
+  -->
+
+  <!-- Uncomment the following lines to enable AOT publishing
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+  -->
+
+</Project>

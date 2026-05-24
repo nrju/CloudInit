@@ -1,0 +1,107 @@
+name: Basic CI workflow for .NET solution
+
+on:
+  # Ability to run the workflow manually.
+  workflow_dispatch:
+
+  # Run the workflow on a pull request creation.
+  pull_request:
+    branches:
+      - main
+
+  # Run the workflow on the main branch push (and, so on, also PR completion).
+  push:
+    branches:
+      - main
+
+  # Run the workflow on release publishing.
+  release:
+    types:
+      - published
+
+# Permissions required to work with packages
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  main:
+    name: Main workflow job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          source-url: https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build -c Release --no-restore
+
+      - name: Run tests
+        run: dotnet test -c Release --no-build
+
+
+#
+# Below are the boilerplates for some "deploy" scenarios.
+# Uncomment the section(s) you need and adjust it to your needs.
+#
+
+
+#
+# Publishung NuGet package(s) to the GitHub registry.
+#
+
+#     - name: Pack NuGet package(s)
+#       run: dotnet pack --no-build
+#
+#     - name: Push NuGet package(s) to the registry
+#       if: github.event_name == 'release'
+#       run: dotnet nuget push **/*.nupkg --skip-duplicate
+
+
+#
+# Publishing container image(s) to the GitHub registry.
+#
+
+#     - name: Login to container registry
+#       if: github.event_name == 'release'
+#       run: docker login -u $GITHUB_REPO_OWNER -p $GITHUB_TOKEN ghcr.io
+#       env:
+#         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+#
+#     - name: Build and publish docker image(s)
+#       if: github.event_name == 'release'
+#       run: >-
+#         dotnet publish /t:PublishContainer
+#         -c Release
+#         /p:ContainerRegistry=ghcr.io
+#         --no-build
+
+#
+# Publishing as a ZIP artifact to the GitHub release.
+#
+
+#     - name: Publish solution
+#       run: dotnet publish -c Release -o Publish
+
+#     - name: Zip published files
+#       shell: pwsh
+#       run: >-
+#         Compress-Archive "Publish/*"
+#         -DestinationPath app.zip
+
+#     - name: Upload artifacts
+#       if: github.event_name == 'release'
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: app.zip
+#         path: app.zip
